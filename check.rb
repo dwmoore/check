@@ -35,22 +35,18 @@ class Check
   end
 
   def to_words
-
     if num_int < 100
-      check_teens
+      check_tens
     elsif num_string.length == 3
-      hundreds = num_string[0].to_i
-      tens_ones = check_teens
-      "#{words[hundreds]} hundred #{tens_ones}"
+      check_hundreds
     elsif num_string.length == 4
-      thousands = num_string[0].to_i
-      hundreds = num_string[1].to_i
-      tens_ones = check_teens
-      "#{words[thousands]} thousand #{words[hundreds]} hundred #{tens_ones}"
+      check_thousands
     end
   end
 
-  def check_teens
+  private
+
+  def check_tens
     rev = num_string.reverse
     rev = rev[0..1]
     num = rev.reverse
@@ -61,5 +57,18 @@ class Check
       ones = num[1].to_i
       "#{words[tens]} #{words[ones]}"
     end
+  end
+
+  def check_hundreds
+    hundreds = num_string[0].to_i
+    tens_ones = check_tens
+    "#{words[hundreds]} hundred #{tens_ones}"
+  end
+
+  def check_thousands
+    thousands = num_string[0].to_i
+    hundreds = num_string[1].to_i
+    tens_ones = check_tens
+    "#{words[thousands]} thousand #{words[hundreds]} hundred #{tens_ones}"
   end
 end
