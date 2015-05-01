@@ -1,13 +1,10 @@
 class Check
-  attr_reader :number
+  attr_reader :num_string, :num_int, :words
 
   def initialize(number)
-    @number = number
-  end
-
-  def to_words
-
-    words = {1 => "one",
+    @num_string = number.to_s
+    @num_int = number.to_i
+    @words = {1 => "one",
              2 => "two",
              3 => "three",
              4 => "four",
@@ -34,40 +31,35 @@ class Check
              70 => "seventy",
              80 => "eighty",
              90 => "ninety",
-             100 => "hundred",
-             1000 => "thousand"
              }
+  end
 
-    string_number = number.to_s
-    if string_number.length == 1
-      words[number]
-    elsif string_number.length == 2 && number < 20
-      words[number]
-    elsif string_number.length == 2 && number > 20
-      tens = format_place(0) * 10
-      ones = string_number[1].to_i
-      words[tens] + " " + words[ones]
-    elsif string_number.length == 3
-      hundreds = string_number[0].to_i 
-      tens = string_number[1].to_i * 10
-      if tens == 10
-        tens = string_number[1..2].to_i
-        return words[hundreds] + " " + words[100] + " " + words[tens]
-      else
-      ones = string_number[2].to_i
-      end
-      words[hundreds] + " " + words[100] + " " + words[tens] + " " + words[ones]
-    elsif string_number.length == 4
-      thousands = string_number[0].to_i
-      hundreds = string_number[1].to_i
-      tens = string_number[2].to_i * 10
-      if tens == 10
-        tens = string_number[2..3].to_i
-        return words[thousands] + " " + words[1000] + " " + words[hundreds] + " " + words[100] + " " + words[tens]
-      else
-      ones = string_number[3].to_i
-      end
-      words[thousands] + " " + words[1000] + " " + words[hundreds] + " " + words[100] + " " + words[tens] + " " + words[ones]
+  def to_words
+
+    if num_int < 100
+      check_teens
+    elsif num_string.length == 3
+      hundreds = num_string[0].to_i
+      tens_ones = check_teens
+      "#{words[hundreds]} hundred #{tens_ones}"
+    elsif num_string.length == 4
+      thousands = num_string[0].to_i
+      hundreds = num_string[1].to_i
+      tens_ones = check_teens
+      "#{words[thousands]} thousand #{words[hundreds]} hundred #{tens_ones}"
+    end
+  end
+
+  def check_teens
+    rev = num_string.reverse
+    rev = rev[0..1]
+    num = rev.reverse
+    if num[0] == "1"
+      "#{words[num.to_i]}"
+    else
+      tens = num[0].to_i * 10
+      ones = num[1].to_i
+      "#{words[tens]} #{words[ones]}"
     end
   end
 end
