@@ -1,9 +1,9 @@
 class Check
-  attr_reader :num_string, :num_int, :words
+  attr_reader :num_string, :num_reverse, :words
 
   def initialize(number)
     @num_string = number.to_s
-    @num_int = number.to_i
+    @num_reverse = num_string.reverse
     @words = {1 => "one",
              2 => "two",
              3 => "three",
@@ -35,7 +35,7 @@ class Check
   end
 
   def to_words
-    if num_int < 100
+    if num_string.to_i < 100
       check_tens
     elsif num_string.length == 3
       check_hundreds
@@ -47,28 +47,23 @@ class Check
   private
 
   def check_tens
-    rev = num_string.reverse
-    rev = rev[0..1]
-    num = rev.reverse
+    num = num_reverse[0..1].reverse
     if num[0] == "1"
       "#{words[num.to_i]}"
     else
-      tens = num[0].to_i * 10
-      ones = num[1].to_i
-      "#{words[tens]} #{words[ones]}"
+      "#{words[num[0].to_i * 10]} #{words[num[1].to_i]}"
     end
   end
 
   def check_hundreds
-    hundreds = num_string[0].to_i
+    hundreds = num_reverse[2].to_i
     tens_ones = check_tens
     "#{words[hundreds]} hundred #{tens_ones}"
   end
 
   def check_thousands
-    thousands = num_string[0].to_i
-    hundreds = num_string[1].to_i
-    tens_ones = check_tens
-    "#{words[thousands]} thousand #{words[hundreds]} hundred #{tens_ones}"
+    thousands = num_reverse[3].to_i
+    hundreds = check_hundreds
+    "#{words[thousands]} thousand #{hundreds}"
   end
 end
